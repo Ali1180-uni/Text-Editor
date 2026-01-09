@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <stack>
 #include <fstream>
 using namespace std;
 const string RESET = "\033[0m";
@@ -9,12 +8,67 @@ const string GREEN = "\033[32m";
 const string YELLOW = "\033[33m";
 const string BLUE = "\033[34m";
 const string CYAN = "\033[36m";
+class Node {
+	public:
+		vector<string> data;
+		Node* Next;
+		Node() {
+			Next = nullptr;
+		}
+};
 
+class Stack {
+	public:
+		Node *top1;
+		int count,limit;
+		Stack() {
+			top1 = nullptr;
+			count = 0;
+			limit = 100;
+		}
+		bool IsEmpty() {
+			return top1 == nullptr;
+		}
+		bool empty() {
+			return IsEmpty();
+		}
+		bool isFull() {
+			return count >= limit;
+		}
+		void push(const vector<string>& sit) {
+			if(isFull()) {
+				return;
+			}
+			Node *temp = new Node();
+			temp->data = sit;
+			temp->Next = top1;
+			top1 = temp;
+			count ++;
+		}
+		void pop() {
+			if(IsEmpty() == true) {
+				return;
+			}
+			Node* temp = top1;
+			top1 = top1->Next;
+			delete temp;
+			count--;
+		}
+		vector<string> top() {
+			if(IsEmpty()) {
+				return {};
+			}
+			return top1->data;
+		}
+		vector<string> topState(){
+			return top();
+		}
+};
 class TextEditor {
 	private:
 		vector<string> inputTxt;
-		stack<vector<string>> undo;
-		stack<vector<string>> redo;
+		Stack undo;
+		Stack redo;
 		string cFilename;
 		string statusMsg;
 
